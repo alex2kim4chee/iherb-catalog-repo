@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://herb.usourcedirect.com/sitemap.xml

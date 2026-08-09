@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Витамины и БАДы из США — каталог цен</title>
+  <meta name="description" content="Каталог витаминов и БАДов из США: поиск, фильтры по бренду и категории, фасовки, цены в долларах и рублях, расчёт доставки.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Витамины и БАДы из США — каталог цен">
+  <meta property="og:description" content="Фильтры по бренду и категории, фасовки, цены в рублях и расчёт доставки.">
+  <meta property="og:site_name" content="SK HEALTH &amp; BEAUTY">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Витамины и БАДы из США — каталог цен">
+
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="catalog-page">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand-logo" href="./index.html">SK HEALTH &amp; BEAUTY</a>
+      <button class="top-contact" id="open-contact" type="button">Связь</button>
+    </div>
+  </header>
+
+  <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-title">
+    <div class="contact-dialog__header">
+      <h2 id="contact-title">Каналы связи</h2>
+      <button id="close-contact" class="contact-dialog__close" type="button" aria-label="Закрыть">×</button>
+    </div>
+    <p class="contact-dialog__subtitle">Выбери удобный канал. Заявку можно отправить после выбора товара и фасовки.</p>
+    <div class="contact-links">
+      <a href="https://wa.me/16463226000" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://t.me/alex_kim_chi" target="_blank" rel="noopener">Telegram</a>
+    </div>
+  </dialog>
+
+  <header class="hero">
+    <p class="kicker">SK HEALTH &amp; BEAUTY</p>
+    <h1>Витамины и БАДы из США</h1>
+    <p class="subtitle">Выбирайте товар и фасовку, отправляйте заявку в удобный канал связи.</p>
+  </header>
+
+  <main class="layout" id="catalog-section">
+    <aside class="filters" id="filters-section" aria-label="Фильтры">
+      <h2>Фильтры</h2>
+
+      <label class="field">
+        <span>Поиск</span>
+        <input id="search" type="search" placeholder="Название, бренд или категория">
+      </label>
+
+      <label class="field">
+        <span>Бренд</span>
+        <select id="brand">
+          <option value="all">Все бренды</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Категория</span>
+        <select id="category">
+          <option value="all">Все категории</option>
+        </select>
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Цена от ($)</span>
+          <input id="price-min" type="number" min="0" step="1" placeholder="0">
+        </label>
+
+        <label class="field">
+          <span>до ($)</span>
+          <input id="price-max" type="number" min="0" step="1" placeholder="200">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Сортировка</span>
+        <select id="sort">
+          <option value="default">По алфавиту</option>
+          <option value="price-asc">Сначала дешевле</option>
+          <option value="price-desc">Сначала дороже</option>
+        </select>
+      </label>
+
+      <button id="reset" class="btn btn-muted" type="button">Сбросить фильтры</button>
+      <p id="stats" class="stats">Загрузка каталога…</p>
+    </aside>
+
+    <section>
+      <div id="catalog" class="grid" aria-live="polite"></div>
+      <p id="empty" class="empty hidden">Ничего не найдено. Измени фильтры или очисти поиск.</p>
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
