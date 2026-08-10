@@ -1,8 +1,11 @@
+import { expandQuery } from "./search-ru.js";
+
 const DATA_URL = "./data/products.json";
 
 const state = {
   products: [],
   query: "",
+  queryTerms: [],
   brand: "all",
   category: "all",
   priceMin: "",
@@ -100,12 +103,13 @@ function renderFilterOptions(products) {
 function productMatches(product) {
   const query = normalize(state.query);
   if (query) {
-    // Категория ищется и по-русски, и по исходному английскому названию:
-    // покупатель может набрать «витамины», а может «vitamins».
+    // Ищем по названию, бренду и категории — и по-русски, и по-английски.
+    // Русский запрос дополнительно расширяется английскими терминами, иначе
+    // «магний» не нашёл бы ни один Magnesium Glycinate.
     const haystack = normalize(
       `${product.name} ${product.brand} ${product.category} ${product.categoryEn || ""}`
     );
-    if (!haystack.includes(query)) {
+    if (!state.queryTerms.some((term) => haystack.includes(term))) {
       return false;
     }
   }
@@ -219,7 +223,11 @@ function renderCatalog() {
 function bindEvents() {
   const bind = (node, event, handler) => node && node.addEventListener(event, handler);
 
-  bind(el.search, "input", (e) => { state.query = e.target.value; renderCatalog(); });
+  bind(el.search, "input", (e) => {
+    state.query = e.target.value;
+    state.queryTerms = expandQuery(e.target.value);
+    renderCatalog();
+  });
   bind(el.brand, "change", (e) => { state.brand = e.target.value; renderCatalog(); });
   bind(el.category, "change", (e) => { state.category = e.target.value; renderCatalog(); });
   bind(el.priceMin, "input", (e) => { state.priceMin = e.target.value; renderCatalog(); });
@@ -228,7 +236,8 @@ function bindEvents() {
 
   bind(el.reset, "click", () => {
     Object.assign(state, {
-      query: "", brand: "all", category: "all", priceMin: "", priceMax: "", sort: "default",
+      query: "", queryTerms: [], brand: "all", category: "all",
+      priceMin: "", priceMax: "", sort: "default",
     });
     el.search.value = "";
     el.brand.value = "all";
