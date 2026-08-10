@@ -100,7 +100,11 @@ function renderFilterOptions(products) {
 function productMatches(product) {
   const query = normalize(state.query);
   if (query) {
-    const haystack = normalize(`${product.name} ${product.brand} ${product.category}`);
+    // Категория ищется и по-русски, и по исходному английскому названию:
+    // покупатель может набрать «витамины», а может «vitamins».
+    const haystack = normalize(
+      `${product.name} ${product.brand} ${product.category} ${product.categoryEn || ""}`
+    );
     if (!haystack.includes(query)) {
       return false;
     }
