@@ -80,11 +80,18 @@ function updateShippingView() {
     return;
   }
 
+  if (state.selected.shippingRub == null) {
+    el.selectionShipping.textContent = "—";
+    el.shippingNote.textContent = "тариф недоступен";
+    return;
+  }
+
   el.selectionShipping.textContent = formatRub(state.selected.shippingRub);
   const weight = state.selected.weightKg;
-  el.shippingNote.textContent = weight
-    ? `вес ${weight.toLocaleString("ru-RU", { maximumFractionDigits: 2 })} кг, до 1 кг — 2000 ₽`
-    : "вес не указан, взят минимальный тариф";
+  const weightText = weight
+    ? `вес ${weight.toLocaleString("ru-RU", { maximumFractionDigits: 2 })} кг`
+    : "вес не указан";
+  el.shippingNote.textContent = `${weightText}, Зона 1, до двери`;
 }
 
 function buildInquiryText() {
@@ -105,9 +112,11 @@ function buildInquiryText() {
     lines.push(`Цена в рублях: ${formatRub(rub)} (${describeRate()})`);
   }
 
-  lines.push(`Доставка: ${formatRub(state.selected.shippingRub)}`);
-  if (rub !== null) {
-    lines.push(`Итого с доставкой: ${formatRub(rub + state.selected.shippingRub)}`);
+  if (state.selected.shippingRub != null) {
+    lines.push(`Доставка от: ${formatRub(state.selected.shippingRub)} (Зона 1, до двери)`);
+  }
+  if (rub !== null && state.selected.shippingRub != null) {
+    lines.push(`Итого от: ${formatRub(rub + state.selected.shippingRub)}`);
   }
   lines.push(`Ссылка: ${window.location.href}`);
 
