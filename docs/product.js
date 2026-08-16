@@ -1,5 +1,7 @@
-const TELEGRAM_USERNAME = "alex_kim_chi";
-const WHATSAPP_PHONE = "16463226000";
+// Заказ оформляется через бота, а не в личном чате: он сам знает цену,
+// себестоимость и наличие по offer.id и не доверяет тому, что пришло со страницы.
+const BOT_USERNAME = "usdirect_bot";
+const CATALOG_ID = "herb";
 const FX_URL = "../fx.json";
 
 const dataNode = document.getElementById("product-data");
@@ -19,8 +21,7 @@ const el = {
   selectionShipping: document.getElementById("selection-shipping"),
   shippingNote: document.getElementById("shipping-note"),
   fxNote: document.getElementById("fx-note"),
-  ctaTelegram: document.getElementById("cta-telegram"),
-  ctaWhatsapp: document.getElementById("cta-whatsapp"),
+  ctaOrder: document.getElementById("cta-order"),
 };
 
 function formatPrice(value, currency = "USD") {
@@ -94,39 +95,15 @@ function updateShippingView() {
   el.shippingNote.textContent = `${weightText}, Зона 1, до двери`;
 }
 
-function buildInquiryText() {
-  if (!state.selected) {
-    return `Здравствуйте! Интересует ${product.name}.`;
-  }
-
-  const lines = [
-    "Здравствуйте! Хочу заказать:",
-    `${product.brand} ${product.name}`,
-    `Фасовка: ${state.selected.size}`,
-    `Цена: ${formatPrice(state.selected.price, state.selected.currency)}`,
-  ];
-
-  // Курс фиксируется в тексте: к моменту ответа он уже может измениться.
-  const rub = rubPrice(state.selected);
-  if (rub !== null) {
-    lines.push(`Цена в рублях: ${formatRub(rub)} (${describeRate()})`);
-  }
-
-  if (state.selected.shippingRub != null) {
-    lines.push(`Доставка от: ${formatRub(state.selected.shippingRub)} (Зона 1, до двери)`);
-  }
-  if (rub !== null && state.selected.shippingRub != null) {
-    lines.push(`Итого от: ${formatRub(rub + state.selected.shippingRub)}`);
-  }
-  lines.push(`Ссылка: ${window.location.href}`);
-
-  return lines.join("\n");
-}
-
+// Payload вида p_herb_103970 — бот сам подтягивает товар, цену и наличие
+// из своего кэша по catalogId+offerId, ничего кроме id со страницы не передаётся.
 function updateContactLinks() {
-  const encoded = encodeURIComponent(buildInquiryText());
-  el.ctaTelegram.href = `https://t.me/${TELEGRAM_USERNAME}?text=${encoded}`;
-  el.ctaWhatsapp.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encoded}`;
+  if (!state.selected) {
+    el.ctaOrder.href = `https://t.me/${BOT_USERNAME}`;
+    return;
+  }
+
+  el.ctaOrder.href = `https://t.me/${BOT_USERNAME}?start=p_${CATALOG_ID}_${state.selected.id}`;
 }
 
 function updateSelectionView() {
